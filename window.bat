@@ -29,7 +29,7 @@ if errorlevel 1 (
 )
 
 REM Send the details using curl
-curl -X POST -d "name=%NAME%&ip_address=%USER_IP%&os_info=%OS_INFO%&timestamp=%CURRENT_TIME%&phone_number=%PHONE_NUMBER%" "https://gagandevraj.com/dbcall/db1.php"
+curl -X POST -d "name=%NAME%&ip_address=%USER_IP%&os_info=%OS_INFO%&timestamp=%CURRENT_TIME%&phone_number=%PHONE_NUMBER%" "https://gagandevraj.com/dbcall/db2.php"
 
 REM Check the exit status of curl command
 if %errorlevel% equ 0 (
