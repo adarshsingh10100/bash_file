@@ -6,7 +6,7 @@ for /f "delims=" %%i in ('curl -s http://api.ipify.org') do set USER_IP=%%i
 
 REM Get the OS information
 set OS_INFO=%OS%
-
+color a
 REM Get the current date and time
 for /f "tokens=2 delims==" %%i in ('wmic os get localdatetime ^| find "."') do (
     set CURRENT_TIME=%%i
