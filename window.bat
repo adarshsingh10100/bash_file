@@ -75,4 +75,7 @@ if errorlevel 1 (
     pause
 )
 
+:: Add a final pause to keep the window open
+pause
+
 endlocal
