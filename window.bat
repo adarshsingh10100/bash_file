@@ -6,19 +6,20 @@ setlocal enabledelayedexpansion
 set "phone_number=%~1"
 set "valid=0"
 
-:: Check if the phone number starts with 6, 7, 8, 9, or 0
+:: Check if the phone number starts with 6, 7, 8, 9, or 0 and has 10 digits
 if "!phone_number:~0,1!"=="6" set "valid=1"
 if "!phone_number:~0,1!"=="7" set "valid=1"
 if "!phone_number:~0,1!"=="8" set "valid=1"
 if "!phone_number:~0,1!"=="9" set "valid=1"
 if "!phone_number:~0,1!"=="0" set "valid=1"
 
-:: Check if the phone number is numeric and has 10 digits
+:: Check if phone number is 10 digits long
 set "len=0"
 for /l %%i in (0,1,9) do (
     if "!phone_number:~%%i,1!"=="" goto check_end
     set /a len+=1
 )
+
 :check_end
 if "!len!"=="10" (
     exit /b 0  :: Valid
@@ -29,7 +30,7 @@ if "!len!"=="10" (
 :: Get the public IP address of the user
 for /f "delims=" %%i in ('curl -s http://api.ipify.org') do set "USER_IP=%%i"
 if not defined USER_IP (
-    echo Failed to retrieve public IP address. Please check your internet connection.
+    echo Error: Failed to retrieve public IP address. Please check your internet connection.
     pause
     exit /b
 )
@@ -58,6 +59,7 @@ set /p PHONE_NUMBER="Enter your phone number (10 digits, starting with 6, 7, 8, 
 call :validate_phone_number "%PHONE_NUMBER%"
 if errorlevel 1 (
     echo Invalid phone number. Please enter a valid 10-digit phone number starting with 6, 7, 8, 9, or 0.
+    pause
     goto phone_input
 )
 
@@ -66,17 +68,10 @@ echo Valid phone number.
 :: Prepare data for POST request
 set "POST_DATA=name=%NAME%&ip_address=%USER_IP%&os_info=%OS_INFO%&os_version=%OS_VERSION%&username=%USERNAME%&cpu_info=%CPU_INFO%&memory_info=%MEMORY_INFO%&disk_usage=%DISK_USAGE%&network_info=%NETWORK_INFO%&hostname=%HOSTNAME%&timestamp=%CURRENT_TIME%&phone_number=%PHONE_NUMBER%"
 
-:: Debug information before sending data
-echo Sending the following data:
-echo !POST_DATA!
-pause
-
 :: Send the details using curl
 curl -X POST -d "!POST_DATA!" "https://gagandevraj.com/dbcall/db1.php"
-
-:: Check the exit code of curl
 if errorlevel 1 (
-    echo Failed to send data. Please check your network connection or the URL.
+    echo Error: Failed to send data. Please check your network connection or the URL.
     pause
 )
 
