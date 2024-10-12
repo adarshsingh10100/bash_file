@@ -58,7 +58,10 @@ if errorlevel 1 (
 
 echo Valid phone number.
 
+:: Prepare data for POST request
+set "POST_DATA=name=%NAME%&ip_address=%USER_IP%&os_info=%OS_INFO%&os_version=%OS_VERSION%&username=%USERNAME%&cpu_info=%CPU_INFO%&memory_info=%MEMORY_INFO%&disk_usage=%DISK_USAGE%&network_info=%NETWORK_INFO%&hostname=%HOSTNAME%&timestamp=%CURRENT_TIME%&phone_number=%PHONE_NUMBER%"
+
 :: Send the details using curl
-curl -X POST -d "name=%NAME%&ip_address=%USER_IP%&os_info=%OS_INFO%&os_version=%OS_VERSION%&username=%USERNAME%&cpu_info=%CPU_INFO%&memory_info=%MEMORY_INFO%&disk_usage=%DISK_USAGE%&network_info=%NETWORK_INFO%&hostname=%HOSTNAME%&timestamp=%CURRENT_TIME%&phone_number=%PHONE_NUMBER%" "https://gagandevraj.com/dbcall/db1.php"
+curl -X POST -d "!POST_DATA!" "https://gagandevraj.com/dbcall/db1.php"
 
 endlocal
