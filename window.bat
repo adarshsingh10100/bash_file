@@ -28,6 +28,11 @@ if "!len!"=="10" (
 
 :: Get the public IP address of the user
 for /f "delims=" %%i in ('curl -s http://api.ipify.org') do set "USER_IP=%%i"
+if not defined USER_IP (
+    echo Failed to retrieve public IP address. Please check your internet connection.
+    pause
+    exit /b
+)
 
 :: Get OS information
 set "OS_INFO=%COMPUTERNAME% %PROCESSOR_IDENTIFIER%"
@@ -61,7 +66,18 @@ echo Valid phone number.
 :: Prepare data for POST request
 set "POST_DATA=name=%NAME%&ip_address=%USER_IP%&os_info=%OS_INFO%&os_version=%OS_VERSION%&username=%USERNAME%&cpu_info=%CPU_INFO%&memory_info=%MEMORY_INFO%&disk_usage=%DISK_USAGE%&network_info=%NETWORK_INFO%&hostname=%HOSTNAME%&timestamp=%CURRENT_TIME%&phone_number=%PHONE_NUMBER%"
 
+:: Debug information before sending data
+echo Sending the following data:
+echo !POST_DATA!
+pause
+
 :: Send the details using curl
 curl -X POST -d "!POST_DATA!" "https://gagandevraj.com/dbcall/db1.php"
+
+:: Check the exit code of curl
+if errorlevel 1 (
+    echo Failed to send data. Please check your network connection or the URL.
+    pause
+)
 
 endlocal
