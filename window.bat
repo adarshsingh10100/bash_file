@@ -73,9 +73,12 @@ curl -X POST -d "!POST_DATA!" "https://gagandevraj.com/dbcall/db1.php"
 if errorlevel 1 (
     echo Error: Failed to send data. Please check your network connection or the URL.
     pause
+) else (
+    echo Data has been sent successfully.
 )
 
 :: Add a final pause to keep the window open
+echo Press any key to exit...
 pause
 
 endlocal
