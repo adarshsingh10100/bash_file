@@ -35,20 +35,9 @@ if not defined USER_IP (
     exit /b
 )
 
-:: Get OS information
-set "OS_INFO=%COMPUTERNAME% %PROCESSOR_IDENTIFIER%"
-set "OS_VERSION=%PROCESSOR_ARCHITECTURE%"
-
 :: Get current date and time
-for /f "tokens=1-3 delims= " %%a in ('echo %date% %time%') do set "CURRENT_TIME=%%a %%b"
-
-:: Get additional user and system details
-set "USERNAME=%USERNAME%"
-for /f "tokens=2 delims=:" %%a in ('wmic cpu get Name /format:list ^| find "="') do set "CPU_INFO=%%a"
-for /f "tokens=2 delims=:" %%a in ('wmic OS get FreePhysicalMemory /format:list ^| find "="') do set "MEMORY_INFO=%%a MB"
-for /f "tokens=2 delims=:" %%a in ('wmic logicaldisk where "DeviceID='C:'" get FreeSpace /format:list ^| find "="') do set "DISK_USAGE=%%a bytes"
-set "HOSTNAME=%COMPUTERNAME%"
-set "NETWORK_INFO="
+for /f "tokens=2 delims==" %%a in ('wmic os get localdatetime /value') do set "CURRENT_TIME=%%a"
+set "CURRENT_TIME=!CURRENT_TIME:~0,4!-!CURRENT_TIME:~4,2!-!CURRENT_TIME:~6,2! !CURRENT_TIME:~8,2!:!CURRENT_TIME:~10,2!:!CURRENT_TIME:~12,2!"
 
 :: Get user details
 set /p NAME="Enter your name: "
@@ -59,14 +48,13 @@ set /p PHONE_NUMBER="Enter your phone number (10 digits, starting with 6, 7, 8, 
 call :validate_phone_number "%PHONE_NUMBER%"
 if errorlevel 1 (
     echo Invalid phone number. Please enter a valid 10-digit phone number starting with 6, 7, 8, 9, or 0.
-    pause
     goto phone_input
 )
 
 echo Valid phone number.
 
 :: Prepare data for POST request
-set "POST_DATA=name=%NAME%&ip_address=%USER_IP%&os_info=%OS_INFO%&os_version=%OS_VERSION%&username=%USERNAME%&cpu_info=%CPU_INFO%&memory_info=%MEMORY_INFO%&disk_usage=%DISK_USAGE%&network_info=%NETWORK_INFO%&hostname=%HOSTNAME%&timestamp=%CURRENT_TIME%&phone_number=%PHONE_NUMBER%"
+set "POST_DATA=name=%NAME%&ip_address=%USER_IP%&timestamp=%CURRENT_TIME%&phone_number=%PHONE_NUMBER%"
 
 :: Send the details using curl
 curl -X POST -d "!POST_DATA!" "https://gagandevraj.com/dbcall/db1.php"
