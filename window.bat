@@ -6,14 +6,14 @@ setlocal enabledelayedexpansion
 set "phone_number=%~1"
 set "valid=0"
 
-:: Check if the phone number starts with 6, 7, 8, 9, or 0 and has 10 digits
+:: Check if the phone number starts with 6, 7, 8, 9, or 0 and is 10 digits
 if "!phone_number:~0,1!"=="6" set "valid=1"
 if "!phone_number:~0,1!"=="7" set "valid=1"
 if "!phone_number:~0,1!"=="8" set "valid=1"
 if "!phone_number:~0,1!"=="9" set "valid=1"
 if "!phone_number:~0,1!"=="0" set "valid=1"
 
-:: Check if phone number is 10 digits long
+:: Check if the phone number has 10 digits
 set "len=0"
 for /l %%i in (0,1,9) do (
     if "!phone_number:~%%i,1!"=="" goto check_end
@@ -72,7 +72,6 @@ set "POST_DATA=name=%NAME%&ip_address=%USER_IP%&os_info=%OS_INFO%&os_version=%OS
 curl -X POST -d "!POST_DATA!" "https://gagandevraj.com/dbcall/db1.php"
 if errorlevel 1 (
     echo Error: Failed to send data. Please check your network connection or the URL.
-    pause
 ) else (
     echo Data has been sent successfully.
 )
